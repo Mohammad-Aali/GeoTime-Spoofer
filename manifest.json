@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "GeoTime Spoofer",
+  "version": "3.0",
+  "description": "Natively spoofs Timezone, Language, and Geolocation via CDP.",
+  "permissions": [
+    "debugger",
+    "storage",
+    "activeTab",
+    "webNavigation"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  }
+}

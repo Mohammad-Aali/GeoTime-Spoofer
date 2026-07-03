@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root {
+      --bg-color: #f4f6f9;
+      --card-bg: #ffffff;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --input-bg: #f8fafc;
+      --bg-card: #ffffff;
+      --border-subtle: #f1f5f9;
+      --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --hover-bg: #f1f5f9;
+      --primary-bg: #eff6ff;
+    }
+    
+    body {
+      width: 280px;
+      min-height: 460px; /* Force minimum height to prevent shrinking during search */
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 20px;
+      color: var(--text-main);
+    }
+    .header svg {
+      color: var(--primary);
+    }
+
+    /* Big Circular Power Button */
+    .power-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .power-btn {
+      width: 86px; 
+      height: 86px;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+      box-shadow: none; /* Removed shadow per request */
+    }
+    .power-btn svg {
+      width: 40px;
+      height: 40px;
+      stroke-width: 2;
+    }
+    .power-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .power-btn.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background-color: #eff6ff;
+    }
+
+    /* Card Container */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* CUSTOM DROPDOWN CSS */
+    .custom-dropdown { position: relative; width: 100%; font-family: inherit; }
+    .custom-dropdown-btn {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      background: var(--input-bg); border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px 12px; font-size: 14px; color: var(--text-main); font-weight: 500;
+      cursor: pointer; transition: all 0.2s; outline: none; box-shadow: none; height: 42px;
+      box-sizing: border-box;
+    }
+    .custom-dropdown-btn:hover { border-color: var(--primary); }
+    .custom-dropdown-label { display: flex; align-items: center; gap: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .custom-dropdown-arrow { width: 16px; height: 16px; color: var(--text-muted); transition: transform 0.2s; }
+
+    .custom-dropdown-menu {
+      position: absolute; z-index: 50; top: 100%; left: 0; right: 0; margin-top: 8px;
+      background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px;
+      box-shadow: var(--shadow); opacity: 0; visibility: hidden; transform: scale(0.95); transform-origin: top;
+      transition: all 0.2s; overflow: hidden;
+    }
+    .custom-dropdown.open .custom-dropdown-menu { opacity: 1; visibility: visible; transform: scale(1); }
+    .custom-dropdown.open .custom-dropdown-arrow { transform: rotate(180deg); }
+
+    /* Search Input */
+    .custom-search-input {
+      width: calc(100% - 16px);
+      margin: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      outline: none;
+      font-size: 13px;
+      box-sizing: border-box;
+      background: var(--input-bg);
+      color: var(--text-main);
+    }
+    .custom-search-input:focus { border-color: var(--primary); }
+
+    .custom-dropdown-list { max-height: 200px; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 2px; }
+    .custom-dropdown-list::-webkit-scrollbar { width: 6px; }
+    .custom-dropdown-list::-webkit-scrollbar-thumb { background-color: var(--border); border-radius: 10px; }
+    .custom-dropdown-item {
+      padding: 10px 12px; border-radius: 8px; cursor: pointer; color: var(--text-main);
+      font-size: 13px; text-align: left; transition: background 0.2s, color 0.2s;
+    }
+    .custom-dropdown-item:hover { background: var(--hover-bg); color: var(--primary); }
+    .custom-dropdown-item.selected { background: var(--primary-bg); color: var(--primary); font-weight: bold; }
+
+    /* Footer Status Card */
+    .footer-status {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .status-info div:first-child {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .status-info div:last-child {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      background-color: #f1f5f9;
+      color: var(--text-muted);
+    }
+    .badge.active {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+    <span>Timezone Spoofer</span>
+  </div>
+
+  <!-- Power Toggle Button -->
+  <div class="power-section">
+    <button id="powerBtn" class="power-btn" title="Toggle Spoofer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+        <line x1="12" y1="2" x2="12" y2="12"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Configuration Card -->
+  <div class="card">
+    <div class="card-title">Configured Timezone</div>
+    
+    <!-- Custom Dropdown Component -->
+    <div class="custom-dropdown" id="locationDropdown">
+      <button class="custom-dropdown-btn" id="dropdownBtn">
+        <span class="custom-dropdown-label" id="dropdownLabel">Select Location</span>
+        <svg class="custom-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      <div class="custom-dropdown-menu">
+        <input type="text" class="custom-search-input" id="dropdownSearch" placeholder="Search cities or countries...">
+        <div class="custom-dropdown-list" id="dropdownList">
+          <!-- Items injected by popup.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Footer -->
+  <div class="footer-status">
+    <div class="status-info">
+      <div>Connection</div>
+      <div id="statusText">Disconnected</div>
+    </div>
+    <div id="statusBadge" class="badge">OFF</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
